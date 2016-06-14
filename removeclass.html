@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <button class="addBtn" type="button">add active</button>
+    <button class="removeBtn" type="button">remove active</button>
+    <button class="replaceBtn" type="button">replace show to active</button>
+    <div class="box"></div>
+    <script>
+
+    var EventUnit = {
+        addHandler: function(elem, type, fn) {
+            if (elem.addEventListener) {
+                elem.addEventListener(type, fn, false);
+            } else if (elem.attachEvent) {
+                elem.attachEvent('on' + type, fn);
+            } else {
+                elem['on' + type] = fn;
+            }
+        }
+    };
+
+    var handleClass = {
+    		getReg: function(cls) {
+    			return new RegExp('(\\s|^)' + cls + '(\\s|$)');
+    		},
+        addClass: function(elem, cls) {
+
+        	if(this.hasClass(elem,cls)) { return; }
+
+        	elem.className += ' ' + cls;
+        },
+        removeClass: function(elem, cls) {
+
+            var names = elem.className.replace(this.getReg(cls), ' ');
+
+            elem.className = names.trim();
+        },
+        hasClass: function(elem, cls) {
+            var haveOrNot = elem.className.search(this.getReg(cls));
+
+            if (haveOrNot !== -1) {
+                return true;
+            }
+            return false;
+        },
+        replaceClass: function(elem, cls, newName) {
+            if(this.hasClass(elem, cls)) {
+            	this.removeClass(elem, cls);
+            	this.addClass(elem,newName);
+            }
+        }
+    };
+
+    /**
+     * add class name
+     * handleClass.addClass(element, add class name)
+     */
+    EventUnit.addHandler(document.querySelector('.addBtn'), 'click', function() {
+        handleClass.addClass(document.querySelector('.box'), 'active')
+    });
+
+    /**
+     * remove class name
+     * handleClass.removeClass(element, remove class name);
+     */
+    EventUnit.addHandler(document.querySelector('.removeBtn'), 'click', function() {
+        handleClass.removeClass(document.querySelector('.box'), 'active');
+    });
+
+    /**
+     * replace class name
+     * handleClass.replaceClass( element, before class name, change class name);
+     */
+    EventUnit.addHandler(document.querySelector('.replaceBtn'), 'click', function() {
+        handleClass.replaceClass(document.querySelector('.box'), 'active', 'show');
+    });
+    </script>
+</body>
+
+</html>
